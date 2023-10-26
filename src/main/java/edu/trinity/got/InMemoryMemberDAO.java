@@ -137,7 +137,8 @@ public class InMemoryMemberDAO implements MemberDAO {
      */
     @Override
     public boolean anyMembers(House house) {
-        return false;
+        return allMembers.stream()
+                .anyMatch(member -> member.house() == house);
     }
 
     /**
@@ -145,7 +146,10 @@ public class InMemoryMemberDAO implements MemberDAO {
      */
     @Override
     public long howMany(House house) {
-        return 0;
+        return allMembers.stream()
+                .filter(member -> member.house() == house)
+                .map(Member::id)
+                .count();
     }
 
     /**
@@ -153,7 +157,10 @@ public class InMemoryMemberDAO implements MemberDAO {
      */
     @Override
     public String houseMemberNames(House house) {
-        return "";
+        return allMembers.stream()
+                .filter(member -> member.house() == house)
+                .map(Member::name)
+                .collect(Collectors.joining(", "));
     }
 
     /**
@@ -161,7 +168,8 @@ public class InMemoryMemberDAO implements MemberDAO {
      */
     @Override
     public Optional<Member> highestSalary() {
-        return Optional.empty();
+        return allMembers.stream()
+                .max(Comparator.comparing(Member::salary));
     }
 
     /**
