@@ -8,12 +8,16 @@ public class InMemoryMemberDAO implements MemberDAO {
 
     @Override
     public Optional<Member> findById(Long id) {
-        return Optional.empty();
+        return allMembers.stream()
+                .filter(member -> member.id().equals(id))
+                .findFirst();
     }
 
     @Override
     public Optional<Member> findByName(String name) {
-        return Optional.empty();
+        return allMembers.stream()
+                .filter(member -> member.name().equals(name))
+                .findFirst();
     }
 
     @Override
