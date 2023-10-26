@@ -93,7 +93,10 @@ public class InMemoryMemberDAO implements MemberDAO {
      */
     @Override
     public List<Member> kingsByNameDesc() {
-        return Collections.emptyList();
+        return allMembers.stream()
+                .filter(member -> member.title() == Title.KING)
+                .sorted((n1, n2) -> n2.name().compareTo(n1.name()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -101,7 +104,10 @@ public class InMemoryMemberDAO implements MemberDAO {
      */
     @Override
     public double averageSalary() {
-        return 0.0;
+        return allMembers.stream()
+                .mapToDouble(Member::salary)
+                .average()
+                .orElse(0.0);
     }
 
     /**
@@ -110,7 +116,11 @@ public class InMemoryMemberDAO implements MemberDAO {
      */
     @Override
     public List<String> namesSorted(House house) {
-        return Collections.emptyList();
+        return allMembers.stream()
+                .filter(member -> member.house() == house)
+                .map(Member::name)
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     /**
@@ -118,7 +128,8 @@ public class InMemoryMemberDAO implements MemberDAO {
      */
     @Override
     public boolean salariesGreaterThan(double max) {
-        return false;
+        return allMembers.stream()
+                .anyMatch(member -> member.salary() > max);
     }
 
     /**
