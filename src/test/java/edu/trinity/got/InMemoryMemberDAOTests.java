@@ -212,4 +212,18 @@ public class InMemoryMemberDAOTests {
                         .isCloseTo(66666.66, withinPercentage(0.01))
         );
     }
+
+    @Test
+    public void findTopEarners() {
+        List<Member> topEarners = dao.findTopEarners(3, House.STARK);
+
+        assertAll(
+                () -> assertThat(topEarners).hasSize(3),
+                () -> assertThat(topEarners).allMatch(member -> member.house() == House.STARK),
+                () -> assertThat(topEarners)
+                        .extracting(Member::name)
+                        .containsExactly("Eddard", "Robb", "Catelyn")
+        );
+    }
+
 }

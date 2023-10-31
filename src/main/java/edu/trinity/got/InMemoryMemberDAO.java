@@ -198,7 +198,7 @@ public class InMemoryMemberDAO implements MemberDAO {
     @Override
     public Map<House, Long> numberOfMembersByHouse() {
         return allMembers.stream()
-                .collect(Collectors.groupingBy(Member::house, Collectors.summingLong(members -> 1L)));
+                .collect(Collectors.groupingBy(Member::house, Collectors.counting()));
     }
 
     /**
@@ -211,6 +211,18 @@ public class InMemoryMemberDAO implements MemberDAO {
                         Member::house,
                         Collectors.summarizingDouble(Member::salary)
                 ));
+    }
+
+    /**
+     * Get the top 'n' earners in GOT of a specific house
+     */
+    @Override
+    public List<Member> findTopEarners(int n, House house) {
+        return allMembers.stream()
+                .filter(member -> member.house().equals(house))
+                .sorted(Comparator.comparingDouble(Member::salary).reversed())
+                .limit(n)
+                .collect(Collectors.toList());
     }
 
 }
